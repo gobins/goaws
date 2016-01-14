@@ -1,4 +1,4 @@
-package client
+package apihandlers
 
 import (
 	"testing"
@@ -22,5 +22,12 @@ func TestGetS3Client(t *testing.T) {
 	s3client := gets3client()
 	if s3client == nil {
 		t.Error("Error getting a s3 client")
+	}
+}
+
+func TestGetCloudtrailClient(t *testing.T) {
+	cloudtrailclient := getcloudtrailclient()
+	if cloudtrailclient == nil {
+		t.Error("Error getting cloudtrail client")
 	}
 }

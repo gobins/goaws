@@ -1,8 +1,9 @@
-package client
+package apihandlers
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/cloudtrail"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
@@ -22,4 +23,10 @@ func gets3client() (s3client *s3.S3) {
 	sess := getawssession()
 	s3client = s3.New(sess)
 	return s3client
+}
+
+func getcloudtrailclient() (cloudtrailclient *cloudtrail.CloudTrail) {
+	sess := getawssession()
+	cloudtrailclient = cloudtrail.New(sess)
+	return cloudtrailclient
 }

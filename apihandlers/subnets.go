@@ -1,0 +1,5 @@
+package apihandlers
+
+func getsubnets() {
+
+}
