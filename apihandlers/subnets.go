@@ -3,6 +3,7 @@ package apihandlers
 import (
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
@@ -19,6 +20,7 @@ func getSubnets(awsregion string) []*ec2.Subnet {
 	params := &ec2.DescribeSubnetsInput{
 		DryRun: aws.Bool(false),
 	}
+	log.Debug("Calling DescribeSubnets")
 	resp, err := ec2client.DescribeSubnets(params)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -29,7 +31,7 @@ func getSubnets(awsregion string) []*ec2.Subnet {
 func parseSubnetsData(subnets []*ec2.Subnet) (response []subnetData) {
 
 	resp := make([]subnetData, 0, 4)
-
+	log.Debug("Parsing Subnets Data")
 	if subnets != nil {
 		for _, subnet := range subnets {
 			parsedData := new(subnetData)

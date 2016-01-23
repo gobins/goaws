@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
 	"github.com/gobins/goaws/apihandlers"
 )
@@ -17,8 +18,9 @@ func main() {
 		{
 			Name:  "get-subnets",
 			Usage: "List all subnets",
+
 			Action: func(c *cli.Context) {
-				//api := apihandlers.New()
+				log.Debug("Calling apihandlers.GetSubnetsFormatted")
 				apihandlers.GetSubnetsFormatted()
 			},
 		},
