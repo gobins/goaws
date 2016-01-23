@@ -7,6 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
+type subnetData struct {
+	subnetID   string
+	cidrBlock  string
+	subnetWrk  string
+	subnetName string
+}
+
 func getSubnets(awsregion string) []*ec2.Subnet {
 	ec2client := getec2client(awsregion)
 	params := &ec2.DescribeSubnetsInput{
@@ -19,34 +26,22 @@ func getSubnets(awsregion string) []*ec2.Subnet {
 	return resp.Subnets
 }
 
-func parseSubnetsData(subnets []ec2.Subnet) {
-	if subnets != nil {
-		type subnetData struct {
-			subnetID   string
-			cidrBlock  string
-			subnetWrk  string
-			subnetName string
-		}
+func parseSubnetsData(subnets []*ec2.Subnet) (response []subnetData) {
 
+	resp := make([]subnetData, 0, 4)
+
+	if subnets != nil {
 		for _, subnet := range subnets {
 			parsedData := new(subnetData)
 			parsedData.subnetID = *subnet.SubnetId
 			parsedData.cidrBlock = *subnet.CidrBlock
 			tags := subnet.Tags
 			if tags != nil {
-				//	test := getTagValue(tags, "WRK")
+				parsedData.subnetWrk = getTagValue(tags, "WRK")
+				parsedData.subnetName = getTagValue(tags, "Name")
 			}
+			resp = append(resp, *parsedData)
 		}
 	}
-}
-
-func getTagValue(tags []*Tag, key string) (value string) {
-	var resp string
-	for _, tag := range tags {
-		if tag.Key == key {
-			value := tag.Value
-		}
-	}
-
 	return resp
 }

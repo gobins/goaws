@@ -8,3 +8,7 @@ func TestGetSubnets(t *testing.T) {
 		t.Error("Error retrieving subnets")
 	}
 }
+
+func TestParseSubnetsData(t *testing.T) {
+
+}
