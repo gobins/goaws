@@ -6,7 +6,8 @@ import (
 	"github.com/apcera/termtables"
 )
 
-func getSubnetsFormatter() {
+//GetSubnetsFormatted retrieve all subnet in a region and format it
+func GetSubnetsFormatted() {
 	table := termtables.CreateTable()
 	table.AddHeaders("Name", "CIDR Block", "WRK", "Subnet Id")
 

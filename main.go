@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/codegangsta/cli"
+	"github.com/gobins/goaws/apihandlers"
 )
 
 func main() {
@@ -12,17 +12,17 @@ func main() {
 	app.Name = "goaws"
 	app.Usage = "Aws cli using Golang SDK"
 
-	//Initialise EC2 client
-
 	//Defining sub-commands
 	app.Commands = []cli.Command{
 		{
 			Name:  "get-subnets",
 			Usage: "List all subnets",
 			Action: func(c *cli.Context) {
-				fmt.Println("Testing", c.Args().First())
+				//api := apihandlers.New()
+				apihandlers.GetSubnetsFormatted()
 			},
 		},
 	}
 	app.Run(os.Args)
+
 }
