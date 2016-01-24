@@ -15,8 +15,8 @@ type subnetData struct {
 	subnetName string
 }
 
-func getSubnets(awsregion string) []*ec2.Subnet {
-	ec2client := getec2client(awsregion)
+func getSubnets() []*ec2.Subnet {
+	ec2client := getec2client()
 	params := &ec2.DescribeSubnetsInput{
 		DryRun: aws.Bool(false),
 	}
@@ -46,4 +46,9 @@ func parseSubnetsData(subnets []*ec2.Subnet) (response []subnetData) {
 		}
 	}
 	return resp
+}
+
+func getSubnetIdByTag(tagname, tagvalue string) (subnetId string) {
+	ec2client := getec2client()
+
 }

@@ -13,7 +13,7 @@ func GetSubnetsFormatted() {
 	table := termtables.CreateTable()
 	table.AddHeaders("Name", "CIDR Block", "WRK", "Subnet Id")
 
-	subnets := getSubnets("ap-southeast-2")
+	subnets := getSubnets()
 	data := parseSubnetsData(subnets)
 
 	if data != nil {

@@ -3,7 +3,7 @@ package apihandlers
 import "testing"
 
 func TestGetSubnets(t *testing.T) {
-	subnets := getSubnets("ap-southeast-2")
+	subnets := getSubnets()
 	if subnets == nil {
 		t.Error("Error retrieving subnets")
 	}
