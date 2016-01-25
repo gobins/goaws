@@ -50,5 +50,19 @@ func parseSubnetsData(subnets []*ec2.Subnet) (response []subnetData) {
 
 func getSubnetIdByTag(tagname, tagvalue string) (subnetId string) {
 	ec2client := getec2client()
+	params := &ec2.DescribeSubnetsInput{
+		Filters = []*ec2.Filter{
+			{ // Required
+				Name: aws.String("tag:"+tagname),
+				Values: []*string{
+					aws.String(tagvalue), // Required
+					// More values...
+				},
+			},
+			// More values...
+		},
+	}
 
+	Filters:
+  ec2client.DescribeSubnets(input *ec2.DescribeSubnetsInput)
 }
