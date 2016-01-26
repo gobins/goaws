@@ -24,3 +24,19 @@ func GetSubnetsFormatted() {
 
 	fmt.Println(table.Render())
 }
+
+//GetInstancesFormatted retrieve all insntances in the subnet
+func GetInstancesFormatted(envname string) {
+	log.Debug("Creating Output Table for all instances data in the subnet")
+	table := termtables.CreateTable()
+	table.AddHeaders("Name", "State", "WRK", "Launched By", "Instance Type", "Instance ID")
+	subnetID := getSubnetIDByTag("Name", envname)
+	instances := getAllInstancesInSubnet(subnetID)
+	data := parseInstancesData(instances)
+	if data != nil {
+		for _, row := range data {
+			table.AddRow(row.name, row.instanceState, row.instanceWrk, row.launchedBy, row.instanceType, row.instancesID)
+		}
+	}
+	fmt.Println(table.Render())
+}

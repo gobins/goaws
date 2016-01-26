@@ -61,11 +61,13 @@ func getSubnetIDByTag(tagname, tagvalue string) (subnetID string) {
 	}
 
 	resp, err := ec2client.DescribeSubnets(params)
-	subnets := resp.Subnets
+
 	if err != nil {
 		log.Error("Error calling DescribeSubnets")
 		return subnetID
-	} else if subnets == nil {
+	}
+	subnets := resp.Subnets
+	if subnets == nil {
 		log.Error("Cannot find subnet with the tag name/value")
 		return subnetID
 	} else if len(subnets) > 1 {

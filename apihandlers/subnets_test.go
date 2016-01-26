@@ -10,7 +10,7 @@ func TestGetAllSubnets(t *testing.T) {
 }
 
 func TestGetSubnetIDByTag(t *testing.T) {
-	subnetID := getSubnetIDByTag("Name", "Env1as70")
+	subnetID := getSubnetIDByTag("Name", "test")
 	if subnetID == "" {
 		t.Error("Error retrieving subnetID")
 	}

@@ -24,6 +24,15 @@ func main() {
 				apihandlers.GetSubnetsFormatted()
 			},
 		},
+		{
+			Name:  "get-instances",
+			Usage: "List all subnets",
+
+			Action: func(c *cli.Context) {
+				log.Debug("Calling apihandlers.GetInstancesFormatted")
+				apihandlers.GetInstancesFormatted("")
+			},
+		},
 	}
 	app.Run(os.Args)
 
