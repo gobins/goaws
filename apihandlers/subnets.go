@@ -1,9 +1,8 @@
 package apihandlers
 
 import (
-	"fmt"
-
 	log "github.com/Sirupsen/logrus"
+	"github.com/apcera/termtables"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
@@ -15,7 +14,7 @@ type subnetData struct {
 	subnetName string
 }
 
-func getSubnets() []*ec2.Subnet {
+func getAllSubnets() []*ec2.Subnet {
 	ec2client := getec2client()
 	params := &ec2.DescribeSubnetsInput{
 		DryRun: aws.Bool(false),
@@ -23,7 +22,7 @@ func getSubnets() []*ec2.Subnet {
 	log.Debug("Calling DescribeSubnets")
 	resp, err := ec2client.DescribeSubnets(params)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Error("Error calling DescribeSubnets")
 	}
 	return resp.Subnets
 }
@@ -48,21 +47,40 @@ func parseSubnetsData(subnets []*ec2.Subnet) (response []subnetData) {
 	return resp
 }
 
-func getSubnetIdByTag(tagname, tagvalue string) (subnetId string) {
+func getSubnetIDByTag(tagname, tagvalue string) (subnetID string) {
 	ec2client := getec2client()
 	params := &ec2.DescribeSubnetsInput{
-		Filters = []*ec2.Filter{
-			{ // Required
-				Name: aws.String("tag:"+tagname),
+		Filters: []*ec2.Filter{
+			{
+				Name: aws.String("tag:" + tagname),
 				Values: []*string{
-					aws.String(tagvalue), // Required
-					// More values...
+					aws.String(tagvalue),
 				},
 			},
-			// More values...
 		},
 	}
 
-	Filters:
-  ec2client.DescribeSubnets(input *ec2.DescribeSubnetsInput)
+	resp, err := ec2client.DescribeSubnets(params)
+	subnets := resp.Subnets
+	if err != nil {
+		log.Error("Error calling DescribeSubnets")
+		return subnetID
+	} else if subnets == nil {
+		log.Error("Cannot find subnet with the tag name/value")
+		return subnetID
+	} else if len(subnets) > 1 {
+		log.Error("More than one subnet with the tag exists")
+		table := termtables.CreateTable()
+		table.AddHeaders("Subnet Id", "CIDR Block", tagname)
+
+		for _, subnet := range subnets {
+			table.AddRow(*subnet.SubnetId, *subnet.CidrBlock, tagvalue)
+		}
+		log.Error(table.Render())
+		log.Error("Returning the first subnet in the list")
+	} else {
+		subnet := resp.Subnets[0]
+		subnetID = *subnet.SubnetId
+	}
+	return subnetID
 }
