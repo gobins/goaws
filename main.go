@@ -14,6 +14,7 @@ func main() {
 	app.Usage = "Aws cli using Golang SDK"
 
 	//Defining sub-commands
+	var environment string
 	app.Commands = []cli.Command{
 		{
 			Name:  "get-subnets",
@@ -31,6 +32,13 @@ func main() {
 			Action: func(c *cli.Context) {
 				log.Debug("Calling apihandlers.GetInstancesFormatted")
 				apihandlers.GetInstancesFormatted("")
+			},
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "",
+					Usage:       "test",
+					Destination: &environment,
+				},
 			},
 		},
 	}
