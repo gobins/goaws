@@ -31,11 +31,14 @@ func GetInstancesFormatted(envname string) {
 	table := termtables.CreateTable()
 	table.AddHeaders("Name", "State", "WRK", "Launched By", "Instance Type", "Instance ID")
 	subnetID := getSubnetIDByTag("Name", envname)
-	instances := getAllInstancesInSubnet(subnetID)
-	data := parseInstancesData(instances)
-	if data != nil {
-		for _, row := range data {
-			table.AddRow(row.name, row.instanceState, row.instanceWrk, row.launchedBy, row.instanceType, row.instancesID)
+	if subnetID != "" {
+		instances := getAllInstancesInSubnet(subnetID)
+		data := parseInstancesData(instances)
+		fmt.Println(data)
+		if data != nil {
+			for _, row := range data {
+				table.AddRow(row.name, row.instanceState, row.instanceWrk, row.launchedBy, row.instanceType, row.instancesID)
+			}
 		}
 	}
 	fmt.Println(table.Render())

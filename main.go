@@ -28,17 +28,16 @@ func main() {
 		{
 			Name:  "get-instances",
 			Usage: "List all subnets",
-
-			Action: func(c *cli.Context) {
-				log.Debug("Calling apihandlers.GetInstancesFormatted")
-				apihandlers.GetInstancesFormatted("")
-			},
 			Flags: []cli.Flag{
 				cli.StringFlag{
-					Name:        "",
+					Name:        "environment",
 					Usage:       "test",
 					Destination: &environment,
 				},
+			},
+			Action: func(c *cli.Context) {
+				log.Debug("Calling apihandlers.GetInstancesFormatted")
+				apihandlers.GetInstancesFormatted(environment)
 			},
 		},
 	}
