@@ -5,6 +5,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/apcera/termtables"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 //GetSubnetsFormatted retrieve all subnet in a region and format it
@@ -42,4 +43,18 @@ func GetInstancesFormatted(envname string) {
 		}
 	}
 	fmt.Println(table.Render())
+}
+
+//UpdateEnvTags updates tag with a value for all objects in subnet
+func UpdateEnvTags(envname string, wrk string) {
+	log.Debug("Updating tags in all objects in subnet")
+	subnetID := getSubnetIDByTag("Name", envname)
+	instances := getAllInstancesInSubnet(subnetID)
+	parsedData := parseInstancesData(instances)
+	resources := make([]*string, 5, 20)
+	for _, data := range parsedData {
+		resources = append(resources, aws.String(data.instancesID))
+	}
+	updateTag("Name", wrk, resources)
+	GetInstancesFormatted(envname)
 }
