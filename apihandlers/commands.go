@@ -45,15 +45,25 @@ func GetInstancesFormatted(envname string) {
 }
 
 //UpdateEnvTags updates tag with a value for all objects in subnet
-func UpdateEnvTags(envname string, wrk string) {
+func UpdateEnvTags(tagname, tagvalue, envname string) {
 	log.Debug("Updating tags in all objects in subnet")
 	subnetID := getSubnetIDByTag("Name", envname)
 	instances := getAllInstancesInSubnet(subnetID)
 	parsedData := parseInstancesData(instances)
-	resources := make([]*string, 5, 20)
+	resources := make([]*string, 0, 20)
+	resources = append(resources, &subnetID)
 	for _, data := range parsedData {
 		resources = append(resources, aws.String(data.instancesID))
+		for _, volume := range data.volumes {
+			resources = append(resources, aws.String(volume))
+		}
 	}
-	updateTag("Name", wrk, resources)
+	table := termtables.CreateTable()
+	table.AddHeaders("Updating Resources")
+	for _, resource := range resources {
+		table.AddRow(*resource)
+	}
+	fmt.Println(table.Render())
+	updateTag(tagname, tagvalue, resources)
 	GetInstancesFormatted(envname)
 }

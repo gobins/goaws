@@ -15,6 +15,7 @@ type instanceData struct {
 	instanceWrk   string
 	instanceType  string
 	launchedBy    string
+	volumes       []string
 }
 
 func getAllInstancesInSubnet(subnetID string) (instances []*ec2.Instance) {
@@ -45,6 +46,7 @@ func getAllInstancesInSubnet(subnetID string) (instances []*ec2.Instance) {
 func parseInstancesData(instances []*ec2.Instance) (response []instanceData) {
 	resp := make([]instanceData, 0, 20)
 	for _, instance := range instances {
+		volumes := make([]string, 0, 5)
 		parsedData := new(instanceData)
 		parsedData.instancesID = *instance.InstanceId
 		parsedData.instanceState = *instance.State.Name
@@ -53,6 +55,11 @@ func parseInstancesData(instances []*ec2.Instance) (response []instanceData) {
 		parsedData.name = getTagValue(tags, "Name")
 		parsedData.launchedBy = getTagValue(tags, "Launched_by")
 		parsedData.instanceWrk = getTagValue(tags, "WRK")
+		//log.Info(instance.BlockDeviceMappings)
+		for _, blockdevices := range instance.BlockDeviceMappings {
+			volumes = append(volumes, *blockdevices.Ebs.VolumeId)
+		}
+		parsedData.volumes = volumes
 		resp = append(resp, *parsedData)
 	}
 	instanceDataSorter(resp)
