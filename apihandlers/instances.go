@@ -31,8 +31,12 @@ func getAllInstancesInSubnet(subnetID string) (instances []*ec2.Instance) {
 	if err != nil {
 		log.Error("Error retrieving all instances in subnet")
 	}
-	reservation := resp.Reservations[0]
-	instances = reservation.Instances
+
+	for _, reservation := range resp.Reservations {
+		for _, instance := range reservation.Instances {
+			instances = append(instances, instance)
+		}
+	}
 	return instances
 }
 

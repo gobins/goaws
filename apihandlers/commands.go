@@ -35,7 +35,6 @@ func GetInstancesFormatted(envname string) {
 	if subnetID != "" {
 		instances := getAllInstancesInSubnet(subnetID)
 		data := parseInstancesData(instances)
-		fmt.Println(data)
 		if data != nil {
 			for _, row := range data {
 				table.AddRow(row.name, row.instanceState, row.instanceWrk, row.launchedBy, row.instanceType, row.instancesID)
