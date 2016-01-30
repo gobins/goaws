@@ -1,6 +1,8 @@
 package apihandlers
 
 import (
+	"sort"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -54,4 +56,15 @@ func parseInstancesData(instances []*ec2.Instance) (response []instanceData) {
 		resp = append(resp, *parsedData)
 	}
 	return resp
+}
+
+//NameSorter is an implementation of Sort
+type NameSorter []instanceData
+
+func (a NameSorter) Len() int           { return len(a) }
+func (a NameSorter) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a NameSorter) Less(i, j int) bool { return a[i].name < a[j].name }
+
+func instanceDataSorter(data []instanceData) {
+	sort.Sort(NameSorter(data))
 }
