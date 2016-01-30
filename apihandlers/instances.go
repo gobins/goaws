@@ -55,6 +55,7 @@ func parseInstancesData(instances []*ec2.Instance) (response []instanceData) {
 		parsedData.instanceWrk = getTagValue(tags, "WRK")
 		resp = append(resp, *parsedData)
 	}
+	instanceDataSorter(resp)
 	return resp
 }
 
