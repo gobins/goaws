@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	log "github.com/Sirupsen/logrus"
@@ -39,6 +40,14 @@ func main() {
 			},
 			Action: func(c *cli.Context) {
 				log.Debug("Calling apihandlers.GetInstancesFormatted")
+				var errorFlag bool
+				if environment == "" {
+					fmt.Println("environment is required for update-tag subcommand")
+					errorFlag = true
+				}
+				if errorFlag == true {
+					os.Exit(1)
+				}
 				apihandlers.GetInstancesFormatted(environment)
 			},
 		},
@@ -64,6 +73,22 @@ func main() {
 			},
 			Action: func(c *cli.Context) {
 				log.Debug("Calling apihandlers.UpdateEnvTags")
+				var errorFlag bool
+				if tagname == "" {
+					fmt.Println("tagname is required for update-tag subcommand")
+					errorFlag = true
+				}
+				if tagvalue == "" {
+					fmt.Println("tagvalue is required for update-tag subcommand")
+					errorFlag = true
+				}
+				if environment == "" {
+					fmt.Println("environment is required for update-tag subcommand")
+					errorFlag = true
+				}
+				if errorFlag == true {
+					os.Exit(1)
+				}
 				apihandlers.UpdateEnvTags(tagname, tagvalue, environment)
 			},
 		},
