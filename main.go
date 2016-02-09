@@ -29,6 +29,14 @@ func main() {
 			},
 		},
 		{
+			Name:  "get-trail",
+			Usage: "Return Cloudtrail events",
+
+			Action: func(c *cli.Context) {
+				apihandlers.GetTrail()
+			},
+		},
+		{
 			Name:  "get-instances",
 			Usage: "List all subnets",
 			Flags: []cli.Flag{
