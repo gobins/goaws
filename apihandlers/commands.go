@@ -2,7 +2,7 @@ package apihandlers
 
 import (
 	"fmt"
-	"encdofing/json"
+	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/apcera/termtables"
 	"github.com/aws/aws-sdk-go/aws"
