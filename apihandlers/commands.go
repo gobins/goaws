@@ -25,10 +25,10 @@ func GetSubnetsFormatted(format string) {
 
 		fmt.Println(table.Render())
 	} else { // only json otherwise
-		fmt.Prinln("{ subnets: ")
-		js, _ = json.MarshalIndent(data, "  ", "  ")
-		fmt.Prinln(string(js))
-		fmt.Prinln("}")
+		fmt.Println("{ subnets: ")
+		js, _ := json.MarshalIndent(data, "  ", "  ")
+		fmt.Println(string(js))
+		fmt.Println("}")
 	}
 
 }
