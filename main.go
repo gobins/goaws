@@ -6,7 +6,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
-	"github.com/godlikeachilles/apihandlers"
+	"github.com/godlikeachilles/goaws/apihandlers"
 )
 
 func main() {
