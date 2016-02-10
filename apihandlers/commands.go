@@ -19,7 +19,7 @@ func GetSubnetsFormatted(format string) {
 	if format == "table" {
 		if data != nil {
 			for _, row := range data {
-				table.AddRow(row.subnetName, row.cidrBlock, row.subnetWrk, row.subnetID)
+				table.AddRow(row.SubnetName, row.CidrBlock, row.SubnetWrk, row.SubnetID)
 			}
 		}
 
