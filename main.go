@@ -20,14 +20,28 @@ func main() {
 	var tagvalue string
 	var attkey string
 	var attvalue string
+	var format string
 	app.Commands = []cli.Command{
 		{
 			Name:  "get-subnets",
 			Usage: "List all subnets",
 
 			Action: func(c *cli.Context) {
+				if format == "" || format == "table" {
+					format = "table"
+				} else if format != "json" {
+					fmt.Println("Unsupported format", format)
+					os.Exit(1)
+				}
 				log.Debug("Calling apihandlers.GetSubnetsFormatted")
-				apihandlers.GetSubnetsFormatted()
+				apihandlers.GetSubnetsFormatted(format)
+			},
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "format",
+					Usage:       "json or table. table is the default.",
+					Destination: &format,
+				},
 			},
 		},
 		{
