@@ -2,28 +2,35 @@ package apihandlers
 
 import (
 	"fmt"
-
+	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/apcera/termtables"
 	"github.com/aws/aws-sdk-go/aws"
 )
 
 //GetSubnetsFormatted retrieve all subnet in a region and format it
-func GetSubnetsFormatted() {
+func GetSubnetsFormatted(format string) {
 	log.Debug("Creating Output Table for Subnets Data")
 	table := termtables.CreateTable()
 	table.AddHeaders("Name", "CIDR Block", "WRK", "Subnet Id")
 
 	subnets := getAllSubnets()
 	data := parseSubnetsData(subnets)
-
-	if data != nil {
-		for _, row := range data {
-			table.AddRow(row.subnetName, row.cidrBlock, row.subnetWrk, row.subnetID)
+	if format == "table" {
+		if data != nil {
+			for _, row := range data {
+				table.AddRow(row.SubnetName, row.CidrBlock, row.SubnetWrk, row.SubnetID)
+			}
 		}
+
+		fmt.Println(table.Render())
+	} else { // only json otherwise
+		fmt.Println("{ subnets: ")
+		js, _ := json.MarshalIndent(data, "  ", "  ")
+		fmt.Println(string(js))
+		fmt.Println("}")
 	}
 
-	fmt.Println(table.Render())
 }
 
 //GetInstancesFormatted retrieve all insntances in the subnet
