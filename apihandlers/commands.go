@@ -69,6 +69,6 @@ func UpdateEnvTags(tagname, tagvalue, envname string) {
 }
 
 //GetTrail returns events captured in cloudtrail
-func GetTrail() {
-	lookupInstanceTrail()
+func GetTrail(key, value string) {
+	resp := lookupInstanceTrail(key, value)
 }

@@ -18,6 +18,8 @@ func main() {
 	var environment string
 	var tagname string
 	var tagvalue string
+	var attkey string
+	var attvalue string
 	app.Commands = []cli.Command{
 		{
 			Name:  "get-subnets",
@@ -31,9 +33,20 @@ func main() {
 		{
 			Name:  "get-trail",
 			Usage: "Return Cloudtrail events",
-
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "attkey",
+					Usage:       "EventId | EventName | Username | ResourceType | ResourceName",
+					Destination: &attkey,
+				},
+				cli.StringFlag{
+					Name:        "attvalue",
+					Usage:       "Attribute Value for the LookupAttribute",
+					Destination: &attvalue,
+				},
+			},
 			Action: func(c *cli.Context) {
-				apihandlers.GetTrail()
+				apihandlers.GetTrail(attkey, attvalue)
 			},
 		},
 		{
