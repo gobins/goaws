@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
+//SubnetData struct type for handling subnets data
 type SubnetData struct {
 	SubnetID   string `json:"subnet_id"`
 	CidrBlock  string `json:"cidr_block"`

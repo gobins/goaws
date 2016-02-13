@@ -60,6 +60,18 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
+				var errorFlag bool
+				if attkey == "" {
+					fmt.Println("attkey is required for update-tag subcommand")
+					errorFlag = true
+				}
+				if attvalue == "" {
+					fmt.Println("attvalue is required for update-tag subcommand")
+					errorFlag = true
+				}
+				if errorFlag == true {
+					os.Exit(1)
+				}
 				apihandlers.GetTrail(attkey, attvalue)
 			},
 		},

@@ -47,6 +47,7 @@ func parseCloudtrailEvents(events []*cloudtrail.Event) []eventData {
 		parsedData.username = *event.Username
 		for _, resource := range event.Resources {
 			parsedData.resourceID = *resource.ResourceName
+			resp = append(resp, *parsedData)
 		}
 	}
 	return resp
