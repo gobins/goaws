@@ -52,6 +52,20 @@ func GetInstancesFormatted(envname string) {
 	fmt.Println(table.Render())
 }
 
+//GetVolumesFormatted retrieve all volumes
+func GetVolumesFormatted(detached bool) {
+	log.Debug("Creating Output Table for all volumes")
+	table := termtables.CreateTable()
+	table.AddHeaders("Name", "State", "WRK", "Size", "Attachments", "Volume ID")
+	data := parseVolumeData(getAllVolumes(), detached)
+	if data != nil {
+		for _, row := range data {
+			table.AddRow(row.Name, row.State, row.Wrk, row.Size, row.Attached, row.VolumeId)
+		}
+	}
+	fmt.Println(table.Render())
+}
+
 //UpdateEnvTags updates tag with a value for all objects in subnet
 func UpdateEnvTags(tagname, tagvalue, envname string) {
 	log.Debug("Updating tags in all objects in subnet")

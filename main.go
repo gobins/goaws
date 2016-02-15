@@ -21,6 +21,7 @@ func main() {
 	var attkey string
 	var attvalue string
 	var format string
+	var detached bool
 	app.Commands = []cli.Command{
 		{
 			Name:  "get-subnets",
@@ -73,6 +74,21 @@ func main() {
 					os.Exit(1)
 				}
 				apihandlers.GetTrail(attkey, attvalue)
+			},
+		},
+		{
+			Name:  "get-volumes",
+			Usage: "List all volumes",
+
+			Action: func(c *cli.Context) {
+				apihandlers.GetVolumesFormatted(detached)
+			},
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name: "detached",
+					Usage: "",
+					Destination: &detached,
+				},
 			},
 		},
 		{
