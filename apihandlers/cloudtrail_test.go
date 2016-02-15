@@ -5,5 +5,5 @@ import (
 )
 
 func TestLookupInstanceTrail(t *testing.T) {
-	lookupInstanceTrail()
+	lookupInstanceTrail("EventName", "RunInstances")
 }

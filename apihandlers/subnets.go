@@ -7,11 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-type subnetData struct {
-	subnetID   string
-	cidrBlock  string
-	subnetWrk  string
-	subnetName string
+//SubnetData struct type for handling subnets data
+type SubnetData struct {
+	SubnetID   string `json:"subnet_id"`
+	CidrBlock  string `json:"cidr_block"`
+	SubnetWrk  string `json:"wrk"`
+	SubnetName string `json:"name"`
 }
 
 func getAllSubnets() []*ec2.Subnet {
@@ -27,19 +28,19 @@ func getAllSubnets() []*ec2.Subnet {
 	return resp.Subnets
 }
 
-func parseSubnetsData(subnets []*ec2.Subnet) (response []subnetData) {
+func parseSubnetsData(subnets []*ec2.Subnet) (response []SubnetData) {
 
-	resp := make([]subnetData, 0, 4)
+	resp := make([]SubnetData, 0, 4)
 	log.Debug("Parsing Subnets Data")
 	if subnets != nil {
 		for _, subnet := range subnets {
-			parsedData := new(subnetData)
-			parsedData.subnetID = *subnet.SubnetId
-			parsedData.cidrBlock = *subnet.CidrBlock
+			parsedData := new(SubnetData)
+			parsedData.SubnetID = *subnet.SubnetId
+			parsedData.CidrBlock = *subnet.CidrBlock
 			tags := subnet.Tags
 			if tags != nil {
-				parsedData.subnetWrk = getTagValue(tags, "WRK")
-				parsedData.subnetName = getTagValue(tags, "Name")
+				parsedData.SubnetWrk = getTagValue(tags, "WRK")
+				parsedData.SubnetName = getTagValue(tags, "Name")
 			}
 			resp = append(resp, *parsedData)
 		}
