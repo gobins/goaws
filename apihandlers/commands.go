@@ -1,8 +1,9 @@
 package apihandlers
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/apcera/termtables"
 	"github.com/aws/aws-sdk-go/aws"
@@ -33,7 +34,7 @@ func GetSubnetsFormatted(format string) {
 
 }
 
-//GetInstancesFormatted retrieve all insntances in the subnet
+//GetInstancesFormatted retrieve all instances in the subnet
 func GetInstancesFormatted(envname string) {
 	log.Debug("Creating Output Table for all instances data in the subnet")
 	table := termtables.CreateTable()
@@ -76,6 +77,14 @@ func UpdateEnvTags(tagname, tagvalue, envname string) {
 }
 
 //GetTrail returns events captured in cloudtrail
-func GetTrail() {
-	lookupInstanceTrail()
+func GetTrail(key, value string) {
+	resp := lookupInstanceTrail(key, value)
+	events := parseCloudtrailEvents(resp)
+
+	table := termtables.CreateTable()
+	table.AddHeaders("EventID", "ResourceID", "Username", "EventName")
+	for _, event := range events {
+		table.AddRow(event.eventID, event.resourceID, event.username, event.eventName)
+	}
+	fmt.Println(table.Render())
 }
