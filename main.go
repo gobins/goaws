@@ -6,7 +6,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
-	"github.com/gobins/goaws/apihandlers"
+	"github.com/godlikeachilles/goaws/apihandlers"
 )
 
 func main() {
@@ -21,6 +21,13 @@ func main() {
 	var attkey string
 	var attvalue string
 	var format string
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name: "format",
+			Usage: "json or table. defaults to table.",
+			Destination: &format,
+		},
+	}
 	app.Commands = []cli.Command{
 		{
 			Name:  "get-subnets",
@@ -35,13 +42,6 @@ func main() {
 				}
 				log.Debug("Calling apihandlers.GetSubnetsFormatted")
 				apihandlers.GetSubnetsFormatted(format)
-			},
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:        "format",
-					Usage:       "json or table. table is the default.",
-					Destination: &format,
-				},
 			},
 		},
 		{
@@ -72,7 +72,7 @@ func main() {
 				if errorFlag == true {
 					os.Exit(1)
 				}
-				apihandlers.GetTrail(attkey, attvalue)
+				apihandlers.GetTrail(attkey, attvalue, format)
 			},
 		},
 		{
@@ -95,7 +95,7 @@ func main() {
 				if errorFlag == true {
 					os.Exit(1)
 				}
-				apihandlers.GetInstancesFormatted(environment)
+				apihandlers.GetInstancesFormatted(environment, format)
 			},
 		},
 		{
