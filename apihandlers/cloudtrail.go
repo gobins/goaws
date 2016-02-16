@@ -30,23 +30,23 @@ func lookupInstanceTrail(key, value string) []*cloudtrail.Event {
 	return resp.Events
 }
 
-type eventData struct {
-	eventID    string
-	eventName  string
-	username   string
-	resourceID string
+type EventData struct {
+	EventID    string `json:"event_id"`
+	EventName  string `json:"name"`
+	Username   string `json:"username"`
+	ResourceID string `json:"resource_id"`
 }
 
-func parseCloudtrailEvents(events []*cloudtrail.Event) []eventData {
+func parseCloudtrailEvents(events []*cloudtrail.Event) []EventData {
 	log.Debug("Parsing Cloudtrail Events Data")
-	resp := make([]eventData, 0, 20)
+	resp := make([]EventData, 0, 20)
 	for _, event := range events {
-		parsedData := new(eventData)
-		parsedData.eventID = *event.EventId
-		parsedData.eventName = *event.EventName
-		parsedData.username = *event.Username
+		parsedData := new(EventData)
+		parsedData.EventID = *event.EventId
+		parsedData.EventName = *event.EventName
+		parsedData.Username = *event.Username
 		for _, resource := range event.Resources {
-			parsedData.resourceID = *resource.ResourceName
+			parsedData.ResourceID = *resource.ResourceName
 			resp = append(resp, *parsedData)
 		}
 	}

@@ -93,7 +93,7 @@ func GetTrail(key, value, format string) {
 		table := termtables.CreateTable()
 		table.AddHeaders("EventID", "ResourceID", "Username", "EventName")
 		for _, event := range events {
-			table.AddRow(event.eventID, event.resourceID, event.username, event.eventName)
+			table.AddRow(event.EventID, event.ResourceID, event.Username, event.EventName)
 		}
 		fmt.Println(table.Render())
 	} else {
