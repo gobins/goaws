@@ -30,11 +30,13 @@ func lookupInstanceTrail(key, value string) []*cloudtrail.Event {
 	return resp.Events
 }
 
+//EventData type for handling cloudtrail events data
 type EventData struct {
 	EventID    string `json:"event_id"`
 	EventName  string `json:"name"`
 	Username   string `json:"username"`
 	ResourceID string `json:"resource_id"`
+	EventTime  string `json:"event_time"`
 }
 
 func parseCloudtrailEvents(events []*cloudtrail.Event) []EventData {
