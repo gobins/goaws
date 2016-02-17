@@ -11,10 +11,10 @@ import (
 
 // produce json output
 func js(what string, data interface{}) {
-	fmt.Println("{", what, ": ")
-	js, _ := json.MarshalIndent(data, "  ", "  ")
+	final_struct := make(map[string]interface{})
+	final_struct[what] = data
+	js, _ := json.MarshalIndent(final_struct, "", "  ")
 	fmt.Println(string(js))
-	fmt.Println("}")
 }
 
 //GetSubnetsFormatted retrieve all subnet in a region and format it
