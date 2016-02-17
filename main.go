@@ -20,10 +20,11 @@ func main() {
 	var tagvalue string
 	var attkey string
 	var attvalue string
-	var format string = "table" // set a default
+	var format string
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name: "format",
+			Value: "table",
 			Usage: "json or table. defaults to table.",
 			Destination: &format,
 		},
