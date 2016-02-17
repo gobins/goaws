@@ -8,14 +8,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-type instanceData struct {
-	name          string
-	instancesID   string
-	instanceState string
-	instanceWrk   string
-	instanceType  string
-	launchedBy    string
-	volumes       []string
+type InstanceData struct {
+	Name          string `json:"name"`
+	InstancesID   string `json:"instance_id"`
+	InstanceState string `json:"state"`
+	InstanceWrk   string `json:"wrk"`
+	InstanceType  string `json:"type"`
+	LaunchedBy    string `json:"launched_by"`
+	Volumes       []string `json:"volumes"`
 }
 
 func getAllInstancesInSubnet(subnetID string) (instances []*ec2.Instance) {
@@ -43,23 +43,23 @@ func getAllInstancesInSubnet(subnetID string) (instances []*ec2.Instance) {
 	return instances
 }
 
-func parseInstancesData(instances []*ec2.Instance) (response []instanceData) {
-	resp := make([]instanceData, 0, 20)
+func parseInstancesData(instances []*ec2.Instance) (response []InstanceData) {
+	resp := make([]InstanceData, 0, 20)
 	for _, instance := range instances {
 		volumes := make([]string, 0, 5)
-		parsedData := new(instanceData)
-		parsedData.instancesID = *instance.InstanceId
-		parsedData.instanceState = *instance.State.Name
-		parsedData.instanceType = *instance.InstanceType
+		parsedData := new(InstanceData)
+		parsedData.InstancesID = *instance.InstanceId
+		parsedData.InstanceState = *instance.State.Name
+		parsedData.InstanceType = *instance.InstanceType
 		tags := instance.Tags
-		parsedData.name = getTagValue(tags, "Name")
-		parsedData.launchedBy = getTagValue(tags, "Launched_by")
-		parsedData.instanceWrk = getTagValue(tags, "WRK")
+		parsedData.Name = getTagValue(tags, "Name")
+		parsedData.LaunchedBy = getTagValue(tags, "Launched_by")
+		parsedData.InstanceWrk = getTagValue(tags, "WRK")
 		//log.Info(instance.BlockDeviceMappings)
 		for _, blockdevices := range instance.BlockDeviceMappings {
 			volumes = append(volumes, *blockdevices.Ebs.VolumeId)
 		}
-		parsedData.volumes = volumes
+		parsedData.Volumes = volumes
 		resp = append(resp, *parsedData)
 	}
 	instanceDataSorter(resp)
@@ -67,12 +67,12 @@ func parseInstancesData(instances []*ec2.Instance) (response []instanceData) {
 }
 
 //NameSorter is an implementation of Sort
-type NameSorter []instanceData
+type NameSorter []InstanceData
 
 func (a NameSorter) Len() int           { return len(a) }
 func (a NameSorter) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a NameSorter) Less(i, j int) bool { return a[i].name < a[j].name }
+func (a NameSorter) Less(i, j int) bool { return a[i].Name < a[j].Name }
 
-func instanceDataSorter(data []instanceData) {
+func instanceDataSorter(data []InstanceData) {
 	sort.Sort(NameSorter(data))
 }
