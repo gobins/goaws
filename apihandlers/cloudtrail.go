@@ -1,6 +1,8 @@
 package apihandlers
 
 import (
+	"encoding/json"
+	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -32,11 +34,24 @@ func lookupInstanceTrail(key, value string) []*cloudtrail.Event {
 
 //EventData type for handling cloudtrail events data
 type EventData struct {
-	EventID    string `json:"event_id"`
-	EventName  string `json:"name"`
-	Username   string `json:"username"`
-	ResourceID string `json:"resource_id"`
-	EventTime  string `json:"event_time"`
+	EventID            string `json:"event_id"`
+	EventName          string `json:"event_name"`
+	Username           string `json:"username"`
+	ResourceID         string `json:"resource_id"`
+	EventTime          string `json:"event_time"`
+	UserIdentity       string `json:"user_identity"`
+	EventSource        string `json:"event_source"`
+	AwsRegion          string `json:"aws_region"`
+	SourceIPAddress    string `json:"source_IPAddress"`
+	UserAgent          string `json:"user_agent"`
+	RequestID          string `json:"request_id"`
+	EventType          string `json:"event_type"`
+	RecipientAccountId string `json:"recipient_accountId"`
+	AccountType        string `json:"account_type"`
+	PrincipalId        string `json:"principal_id"`
+	Arn                string `json:"arn"`
+	AccountId          string `json:"account_id"`
+	AccessKeyId        string `json:"access_key_Id"`
 }
 
 func parseCloudtrailEvents(events []*cloudtrail.Event) []EventData {
@@ -47,9 +62,34 @@ func parseCloudtrailEvents(events []*cloudtrail.Event) []EventData {
 		parsedData.EventID = *event.EventId
 		parsedData.EventName = *event.EventName
 		parsedData.Username = *event.Username
-		for _, resource := range event.Resources {
-			parsedData.ResourceID = *resource.ResourceName
+
+		response := &EventResponse{}
+		reader := strings.NewReader(*event.CloudTrailEvent)
+		err := json.NewDecoder(reader).Decode(&response)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		parsedData.EventTime = response.EventTime
+		parsedData.EventSource = response.EventSource
+		parsedData.AwsRegion = response.AwsRegion
+		parsedData.SourceIPAddress = response.SourceIPAddress
+		parsedData.UserAgent = response.UserAgent
+		parsedData.RequestID = response.RequestID
+		parsedData.EventType = response.EventType
+		parsedData.RecipientAccountId = response.RecipientAccountId
+		parsedData.AccountType = response.UserIdentity.Type
+		parsedData.PrincipalId = response.UserIdentity.PrincipalId
+		parsedData.Arn = response.UserIdentity.Arn
+		parsedData.AccountId = response.UserIdentity.AccountId
+		parsedData.AccessKeyId = response.UserIdentity.AccessKeyId
+		if len(event.Resources) == 0 {
 			resp = append(resp, *parsedData)
+		} else {
+			for _, resource := range event.Resources {
+				parsedData.ResourceID = *resource.ResourceName
+				resp = append(resp, *parsedData)
+			}
 		}
 	}
 	return resp
